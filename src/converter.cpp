@@ -1,6 +1,6 @@
 #include "rclcpp/rclcpp.hpp"
-#include "visualization_msgs/msg/marker.hpp"
-#include "visualization_msgs/msg/marker_array.hpp"
+#include "mmr_base/msg/marker.hpp"
+#include "mmr_base/msg/marker_array.hpp"
 
 class MarkerConverterNode : public rclcpp::Node
 {
@@ -8,7 +8,7 @@ public:
     MarkerConverterNode() : Node("marker_converter_node")
     {
         // Subscriber to Marker messages
-        marker_sub_ = this->create_subscription<visualization_msgs::msg::Marker>(
+        marker_sub_ = this->create_subscription<mmr_base::msg::Marker>(
             "/slam/cones_position",
             10,
             std::bind(&MarkerConverterNode::markerCallback, this, std::placeholders::_1));
@@ -18,7 +18,7 @@ public:
     }
 
 private:
-    void markerCallback(const visualization_msgs::msg::Marker::SharedPtr msg)
+    void markerCallback(const mmr_base::msg::Marker::SharedPtr msg)
     {
         RCLCPP_INFO(this->get_logger(), "Received a marker with ID: %d", msg->id);
 
@@ -28,7 +28,7 @@ private:
         // Create a new marker for each point in the received marker
         for (size_t i = 0; i < msg->points.size(); ++i)
         {
-            visualization_msgs::msg::Marker point_marker;
+            mmr_base::msg::Marker point_marker;
             point_marker.header.frame_id = "track";
             point_marker.header.stamp = this->now();
             point_marker.ns = "";
@@ -48,9 +48,9 @@ private:
         marker_array_pub_->publish(marker_array_);
     }
 
-    rclcpp::Subscription<visualization_msgs::msg::Marker>::SharedPtr marker_sub_;
-    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_array_pub_;
-    visualization_msgs::msg::MarkerArray marker_array_;
+    rclcpp::Subscription<mmr_base::msg::Marker>::SharedPtr marker_sub_;
+    rclcpp::Publisher<mmr_base::msg::MarkerArray>::SharedPtr marker_array_pub_;
+    mmr_base::msg::MarkerArray marker_array_;
 };
 
 int main(int argc, char **argv)

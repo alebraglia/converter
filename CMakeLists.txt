@@ -7,9 +7,17 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(mmr_base REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+add_executable(converter src/converter.cpp)
+ament_target_dependencies(converter 
+                          rclcpp 
+                          mmr_base)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
